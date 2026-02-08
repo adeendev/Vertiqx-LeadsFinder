@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+playwright
+playwright-stealth
+sqlmodel
+beautifulsoup4
+requests
+python-dotenv
+pandas
+pydantic
+email-validator
+aiofiles
+apify-client
