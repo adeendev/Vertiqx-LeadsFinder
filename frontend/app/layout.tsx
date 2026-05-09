@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Vertiqx Lead Generator",
   description: "Find high-quality leads",
+  icons: { icon: "/icon.svg" },
 };
 
 export default function RootLayout({

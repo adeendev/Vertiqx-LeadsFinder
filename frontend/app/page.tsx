@@ -67,7 +67,7 @@ export default function Home() {
   const logsEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const API_URL = 'http://localhost:8000/api';
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api';
 
   const [searchQuery, setSearchQuery] = useState('');
 

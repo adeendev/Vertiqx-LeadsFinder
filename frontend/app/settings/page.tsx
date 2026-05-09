@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 
 export default function SettingsPage() {
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api';
   const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
@@ -37,7 +38,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/settings');
+      const response = await axios.get(`${API_BASE}/settings`);
       setSettings(response.data);
       
       // Infer provider
@@ -64,7 +65,7 @@ export default function SettingsPage() {
     
     setLoading(true);
     try {
-        const res = await axios.post('http://localhost:8000/api/settings/load_provider', { provider: newProvider });
+        const res = await axios.post(`${API_BASE}/settings/load_provider`, { provider: newProvider });
         // Update local state with the returned settings
         setSettings(prev => ({
             ...prev,
@@ -83,7 +84,7 @@ export default function SettingsPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/api/settings', settings);
+      await axios.post(`${API_BASE}/settings`, settings);
       addToast('Settings saved successfully', 'success');
     } catch (error) {
       console.error(error);

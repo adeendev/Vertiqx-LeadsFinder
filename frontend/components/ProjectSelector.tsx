@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Folder, Plus, ArrowRight, Database, Edit2, Trash2, X, Check } from 'lucide-react';
 import axios from 'axios';
+import CreateProjectModal from './CreateProjectModal';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api';
 
 interface ProjectSelectorProps {
   onSelect: (projectName: string) => void;
@@ -10,10 +13,10 @@ interface ProjectSelectorProps {
 
 export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
   const [projects, setProjects] = useState<string[]>([]);
-  const [newProject, setNewProject] = useState('');
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -21,7 +24,7 @@ export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/projects');
+      const res = await axios.get(`${API_BASE}/projects`);
       setProjects(res.data);
     } catch (error) {
       console.error("Failed to fetch projects", error);
@@ -30,24 +33,11 @@ export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
     }
   };
 
-  const handleCreate = async () => {
-    if (newProject.trim()) {
-      try {
-        await axios.post('http://localhost:8000/api/projects', { name: newProject.trim() });
-        // Refresh list
-        fetchProjects();
-        setNewProject('');
-      } catch (error) {
-        console.error("Failed to create project", error);
-      }
-    }
-  };
-
   const handleDelete = async (e: React.MouseEvent, name: string) => {
     e.stopPropagation();
     if (confirm(`Are you sure you want to delete "${name}"? All associated leads will be deleted permanently.`)) {
         try {
-            await axios.delete(`http://localhost:8000/api/projects/${name}`);
+            await axios.delete(`${API_BASE}/projects/${name}`);
             fetchProjects();
         } catch (error) {
             console.error("Failed to delete project", error);
@@ -70,7 +60,7 @@ export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
       e.stopPropagation();
       if (editName.trim() && editName !== editingProject) {
           try {
-              await axios.put(`http://localhost:8000/api/projects/${editingProject}`, { name: editName.trim() });
+              await axios.put(`${API_BASE}/projects/${editingProject}`, { name: editName.trim() });
               setEditingProject(null);
               fetchProjects();
           } catch (error) {
@@ -166,29 +156,29 @@ export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
             </div>
           </div>
 
-          {/* New Project Input */}
+          {/* New Project Button */}
           <div className="space-y-2">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">New Project Name</label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newProject}
-                onChange={(e) => setNewProject(e.target.value)}
-                placeholder="e.g. Roofers Miami 2024"
-                className="flex-1 p-3 bg-gray-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-0 rounded-xl transition-all outline-none font-medium"
-                onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-              />
-              <button
-                onClick={handleCreate}
-                disabled={!newProject.trim()}
-                className="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-blue-600/20"
-              >
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="w-full p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-3 font-medium group"
+            >
+              <div className="p-1.5 bg-white/20 rounded-lg group-hover:bg-white/30 transition">
                 <Plus size={20} />
-              </button>
-            </div>
+              </div>
+              Create New Project
+            </button>
+            <p className="text-center text-xs text-gray-400">
+              Create a new project to start a fresh lead search
+            </p>
           </div>
         </div>
       </div>
+      
+      <CreateProjectModal 
+        isOpen={showCreateModal} 
+        onClose={() => setShowCreateModal(false)}
+        onCreated={fetchProjects}
+      />
     </div>
   );
 }

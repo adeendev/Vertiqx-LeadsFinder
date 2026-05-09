@@ -30,7 +30,7 @@ app = FastAPI(title="Lead Intelligence System")
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "*"], 
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,12 +69,17 @@ def on_startup():
                 existing.value = val
                 session.add(existing)
             elif key == "SMTP_PASS" and val and (not existing.value or existing.value == ""):
-                # Update password if it's empty in DB but we have it in env
                 existing.value = val
                 session.add(existing)
         session.commit()
-        
-        # Initial load of settings into emailer
+
+    # Initialize services after tables exist
+    global analyzer, scorer, emailer
+    analyzer = WebsiteAnalyzer()
+    scorer = Scorer()
+    emailer = EmailService()
+    # Load settings into emailer
+    with Session(engine) as session:
         emailer.reload_settings(session)
 
 # Settings Endpoints
@@ -196,10 +201,10 @@ def run_apify(request: ApifyRunRequest, background_tasks: BackgroundTasks, sessi
     
     return {"status": "started", "message": "Apify task started in background"}
 
-# Services
-analyzer = WebsiteAnalyzer()
-scorer = Scorer()
-emailer = EmailService()
+# Services (set during startup)
+analyzer = None
+scorer = None
+emailer = None
 
 import subprocess
 import sys

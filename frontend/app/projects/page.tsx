@@ -6,16 +6,19 @@ import { Folder, Plus, ArrowRight, Database, Edit2, Trash2, X, Check, Search, Ca
 import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/Toast';
+import CreateProjectModal from '@/components/CreateProjectModal';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api';
 
 export default function ProjectsPage() {
   const router = useRouter();
   const { addToast } = useToast();
   const [projects, setProjects] = useState<string[]>([]);
-  const [newProject, setNewProject] = useState('');
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -23,28 +26,13 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/projects');
+      const res = await axios.get(`${API_BASE}/projects`);
       setProjects(res.data);
     } catch (error) {
       console.error("Failed to fetch projects", error);
       addToast('Failed to load projects', 'error');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newProject.trim()) {
-      try {
-        await axios.post('http://localhost:8000/api/projects', { name: newProject.trim() });
-        fetchProjects();
-        setNewProject('');
-        addToast('Project created successfully!', 'success');
-      } catch (error: any) {
-        console.error("Failed to create project", error);
-        addToast(error.response?.data?.detail || 'Failed to create project', 'error');
-      }
     }
   };
 
@@ -82,7 +70,7 @@ export default function ProjectsPage() {
       e.stopPropagation();
       if (editName.trim() && editName !== editingProject) {
           try {
-              await axios.put(`http://localhost:8000/api/projects/${editingProject}`, { name: editName.trim() });
+              await axios.put(`${API_BASE}/projects/${editingProject}`, { name: editName.trim() });
               
               // Update local storage if needed
               if (localStorage.getItem('currentProject') === editingProject) {
@@ -121,23 +109,19 @@ export default function ProjectsPage() {
                 <p className="text-gray-500 mt-1">Manage your lead generation campaigns</p>
             </div>
             
-            <form onSubmit={handleCreate} className="flex gap-3 w-full md:w-auto">
-                <input
-                    type="text"
-                    value={newProject}
-                    onChange={(e) => setNewProject(e.target.value)}
-                    placeholder="New Project Name..."
-                    className="flex-1 md:w-64 p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                <button 
-                    type="submit"
-                    disabled={!newProject.trim()}
-                    className="px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
-                >
-                    <Plus size={18} /> Create
-                </button>
-            </form>
+            <button 
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 flex items-center gap-2 whitespace-nowrap w-fit"
+            >
+                <Plus size={18} /> Create Project
+            </button>
         </div>
+        
+        <CreateProjectModal 
+            isOpen={showCreateModal} 
+            onClose={() => setShowCreateModal(false)}
+            onCreated={fetchProjects}
+        />
 
         {/* Search */}
         <div className="relative mb-8">
