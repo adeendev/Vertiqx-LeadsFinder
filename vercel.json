@@ -1,26 +1,5 @@
 {
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/out",
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "@vercel/python@3"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/_/backend/api/$1"
-    }
-  ],
-  "experimentalServices": {
-    "frontend": {
-      "root": "frontend",
-      "routePrefix": "/",
-      "framework": "nextjs"
-    },
-    "backend": {
-      "root": "backend",
-      "routePrefix": "/_/backend"
-    }
-  }
+  "rootDirectory": "frontend"
 }
