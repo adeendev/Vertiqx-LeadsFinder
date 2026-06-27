@@ -40,7 +40,7 @@ export default function ProjectsPage() {
     e.stopPropagation();
     if (confirm(`Are you sure you want to delete "${name}"? All associated leads will be deleted permanently.`)) {
         try {
-            await axios.delete(`http://localhost:8000/api/projects/${name}`);
+            await axios.delete(`${API_BASE}/projects/${name}`);
             fetchProjects();
             addToast('Project deleted', 'success');
             

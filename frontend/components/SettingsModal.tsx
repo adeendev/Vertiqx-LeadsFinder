@@ -26,21 +26,6 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const [provider, setProvider] = useState('custom');
 
-  const providers = {
-    gmail: {
-      SMTP_HOST: 'smtp.gmail.com',
-      SMTP_PORT: '587',
-      SMTP_USER: '', // Pre-filled from env
-      SMTP_PASS: '', // User should probably enter this, but I'll leave blank or pre-fill if requested
-    },
-    hostinger: {
-      SMTP_HOST: 'smtp.hostinger.com',
-      SMTP_PORT: '465',
-      SMTP_USER: '', // Pre-filled from env
-      SMTP_PASS: '', // Security best practice usually avoids this, but user asked to "import env"
-    }
-  };
-
   // Fetch settings when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -50,10 +35,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/settings');
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/settings`);
       if (res.data) {
         setSettings(prev => ({ ...prev, ...res.data }));
-        // Try to detect provider
         if (res.data.SMTP_HOST?.includes('hostinger')) setProvider('hostinger');
         else if (res.data.SMTP_HOST?.includes('gmail')) setProvider('gmail');
         else setProvider('custom');
@@ -63,34 +47,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleProviderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleProviderChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newProvider = e.target.value;
     setProvider(newProvider);
-    
-    if (newProvider === 'hostinger') {
-      setSettings(prev => ({
-        ...prev,
-        SMTP_HOST: 'smtp.hostinger.com',
-        SMTP_PORT: '465',
-        SMTP_USER: '',
-        SMTP_PASS: '',
-        SMTP_FROM: '',
-        COMPANY_NAME: '',
-        COMPANY_WEBSITE: '',
-        COMPANY_LOGO: ''
-      }));
-    } else if (newProvider === 'gmail') {
-      setSettings(prev => ({
-        ...prev,
-        SMTP_HOST: 'smtp.gmail.com',
-        SMTP_PORT: '587',
-        SMTP_USER: '',
-        SMTP_PASS: '',
-        SMTP_FROM: '',
-        COMPANY_NAME: '',
-        COMPANY_WEBSITE: '',
-        COMPANY_LOGO: ''
-      }));
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/settings/load_provider`, { provider: newProvider });
+      setSettings(prev => ({ ...prev, ...res.data.settings }));
+    } catch (error) {
+      console.error("Failed to load provider settings", error);
     }
   };
 
@@ -98,7 +62,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/api/settings', settings);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/settings`, settings);
       addToast('Settings saved successfully!', 'success');
       onClose();
     } catch (error) {

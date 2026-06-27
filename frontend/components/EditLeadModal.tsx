@@ -55,7 +55,7 @@ export default function EditLeadModal({ isOpen, onClose, lead, onUpdate }: EditL
     setLoading(true);
 
     try {
-      await axios.put(`http://localhost:8000/api/leads/${lead.id}`, formData);
+      await axios.put(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/leads/${lead.id}`, formData);
       addToast('Lead updated successfully', 'success');
       onUpdate();
       onClose();

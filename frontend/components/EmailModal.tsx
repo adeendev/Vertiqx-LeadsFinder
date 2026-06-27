@@ -17,7 +17,7 @@ export default function EmailModal({ isOpen, onClose, lead }: EmailModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      axios.get('http://localhost:8000/api/settings')
+      axios.get(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/settings`)
         .then(res => setSettings(res.data))
         .catch(err => console.error("Failed to load settings", err));
     }
@@ -67,7 +67,7 @@ export default function EmailModal({ isOpen, onClose, lead }: EmailModalProps) {
     setStatus(null);
 
     try {
-      await axios.post('http://localhost:8000/api/send_email', {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/send_email`, {
         to_email: lead.email,
         subject: subject,
         message: message,

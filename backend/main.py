@@ -41,11 +41,21 @@ def on_startup():
     create_db_and_tables()
     # Initialize default settings if they don't exist
     with Session(engine) as session:
+        # Env-to-settings mapping: settings that can be seeded from environment variables
+        env_overrides = {
+            "SMTP_HOST": os.getenv("HOSTINGER_HOST", ""),
+            "SMTP_PORT": os.getenv("HOSTINGER_PORT", ""),
+            "SMTP_USER": os.getenv("HOSTINGER_USER", ""),
+            "SMTP_PASS": os.getenv("HOSTINGER_PASS", ""),
+            "SMTP_FROM": os.getenv("HOSTINGER_FROM", ""),
+            "APIFY_API_TOKEN": os.getenv("APIFY_API_TOKEN", ""),
+        }
+
         defaults = {
             "SMTP_HOST": "smtp.hostinger.com",
             "SMTP_PORT": "465",
             "SMTP_USER": "",
-            "SMTP_PASS": os.getenv("HOSTINGER_PASS", ""),
+            "SMTP_PASS": "",
             "SMTP_FROM": "",
             "COMPANY_NAME": "",
             "COMPANY_WEBSITE": "",
@@ -59,18 +69,22 @@ def on_startup():
             "TEMPLATE_WITH_ISSUES_BODY": "Hi {business_name},\n\nI visited your website and noticed a few things that could be improved:\n\n{diagnosis}\n\nWe can help you fix these issues to get more customers.",
             "TEMPLATE_AI_WEBSITE_SUBJECT": "Upgrade your website for {business_name}",
             "TEMPLATE_AI_WEBSITE_BODY": "Hi {business_name},\n\nI noticed your website appears to be built with a generic builder. While these are great for starting out, a custom professional site can significantly boost your credibility and conversions.\n\nWe specialize in upgrading businesses to modern, high-performance websites.",
-            "APIFY_API_TOKEN": os.getenv("APIFY_API_TOKEN", "")
         }
         for key, val in defaults.items():
             existing = session.exec(select(Settings).where(Settings.key == key)).first()
             if not existing:
                 session.add(Settings(key=key, value=val))
-            elif key == "APIFY_API_TOKEN" and val and not existing.value:
-                existing.value = val
-                session.add(existing)
-            elif key == "SMTP_PASS" and val and (not existing.value or existing.value == ""):
-                existing.value = val
-                session.add(existing)
+
+        # Seed env vars into DB if the setting is missing or empty
+        for key, val in env_overrides.items():
+            if val:
+                existing = session.exec(select(Settings).where(Settings.key == key)).first()
+                if not existing or not existing.value:
+                    if existing:
+                        existing.value = val
+                        session.add(existing)
+                    else:
+                        session.add(Settings(key=key, value=val))
         session.commit()
 
     # Initialize services after tables exist

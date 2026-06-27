@@ -42,7 +42,7 @@ export default function AddLeadModal({ isOpen, onClose, onAdd, currentProject }:
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:8000/api/leads', {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000/api'}/leads`, {
           ...formData,
           project_name: currentProject
       });
