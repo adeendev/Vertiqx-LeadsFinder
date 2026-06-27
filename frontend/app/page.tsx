@@ -444,7 +444,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3 animate-fade-in-up">
           <RefreshCw className="animate-spin text-blue-600" size={32} />
-          <p className="text-slate-500 font-medium tracking-wide">Initializing Vertiqx...</p>
+          <p className="text-slate-500 font-medium tracking-wide">Initializing...</p>
         </div>
       </div>
     );

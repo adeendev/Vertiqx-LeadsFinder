@@ -33,7 +33,7 @@ class EmailService:
         self.user = config.get("SMTP_USER", "")
         self.password = config.get("SMTP_PASS", "")
         self.from_email = config.get("SMTP_FROM") or self.user
-        self.company_name = config.get("COMPANY_NAME", "Vertiqx")
+        self.company_name = config.get("COMPANY_NAME", "")
         self.company_logo = config.get("COMPANY_LOGO", "")
         self.company_website = config.get("COMPANY_WEBSITE", "")
         self.template_type = config.get("TEMPLATE_TYPE", "html")
@@ -107,7 +107,7 @@ class EmailService:
                 msgAlternative.attach(part)
 
                 # Attach Image with Content-ID
-                logo_path = r"f:\Adeen\Projects\New folder\public\Vertiqx.png"
+                logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logo.png")
                 if os.path.exists(logo_path):
                     try:
                         with open(logo_path, 'rb') as fp:
@@ -115,7 +115,7 @@ class EmailService:
                         
                         # Define the image ID
                         msgImage.add_header('Content-ID', '<company_logo>')
-                        msgImage.add_header('Content-Disposition', 'inline', filename="Vertiqx.png")
+                        msgImage.add_header('Content-Disposition', 'inline', filename="logo.png")
                         msg.attach(msgImage)
                         logging.info("Attached logo via CID")
                     except Exception as img_err:

@@ -30,13 +30,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     gmail: {
       SMTP_HOST: 'smtp.gmail.com',
       SMTP_PORT: '587',
-      SMTP_USER: 'vertiqx.ai@gmail.com', // Pre-filled from env
+      SMTP_USER: '', // Pre-filled from env
       SMTP_PASS: '', // User should probably enter this, but I'll leave blank or pre-fill if requested
     },
     hostinger: {
       SMTP_HOST: 'smtp.hostinger.com',
       SMTP_PORT: '465',
-      SMTP_USER: 'adeen@vertiqx.com', // Pre-filled from env
+      SMTP_USER: '', // Pre-filled from env
       SMTP_PASS: '', // Security best practice usually avoids this, but user asked to "import env"
     }
   };
@@ -72,26 +72,24 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         ...prev,
         SMTP_HOST: 'smtp.hostinger.com',
         SMTP_PORT: '465',
-        SMTP_USER: 'adeen@vertiqx.com',
-        SMTP_PASS: 'Latitude5411@', // Imported from env
-        SMTP_FROM: 'adeen@vertiqx.com',
-        // Auto-fill branding
-        COMPANY_NAME: 'Vertiqx',
-        COMPANY_WEBSITE: 'https://vertiqx.com',
-        COMPANY_LOGO: 'https://vertiqx.com/logo.png' // Assuming standard logo path or placeholder
+        SMTP_USER: '',
+        SMTP_PASS: '',
+        SMTP_FROM: '',
+        COMPANY_NAME: '',
+        COMPANY_WEBSITE: '',
+        COMPANY_LOGO: ''
       }));
     } else if (newProvider === 'gmail') {
       setSettings(prev => ({
         ...prev,
         SMTP_HOST: 'smtp.gmail.com',
         SMTP_PORT: '587',
-        SMTP_USER: 'vertiqx.ai@gmail.com',
-        SMTP_PASS: 'dubw hmpl nlap mybg', // Imported from env
-        SMTP_FROM: 'vertiqx.ai@gmail.com',
-        // Auto-fill branding
-        COMPANY_NAME: 'Vertiqx',
-        COMPANY_WEBSITE: 'https://vertiqx.com',
-        COMPANY_LOGO: 'https://vertiqx.com/logo.png'
+        SMTP_USER: '',
+        SMTP_PASS: '',
+        SMTP_FROM: '',
+        COMPANY_NAME: '',
+        COMPANY_WEBSITE: '',
+        COMPANY_LOGO: ''
       }));
     }
   };
@@ -157,7 +155,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-medium"
                 >
                   <option value="custom">Custom SMTP</option>
-                  <option value="hostinger">Hostinger (Vertiqx)</option>
+                  <option value="hostinger">Hostinger</option>
                   <option value="gmail">Gmail</option>
                 </select>
               </div>

@@ -79,7 +79,7 @@ export default function ProjectSelector({ onSelect }: ProjectSelectorProps) {
           <div className="bg-blue-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-600">
             <Database size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome to Vertiqx</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Welcome to LeadGen</h1>
           <p className="text-gray-500">Select an existing project or create a new one to start gathering leads.</p>
         </div>
 

@@ -1,5 +1,5 @@
 ---
-title: Vertiqx Leads Backend
+title: Lead Intelligence Backend
 emoji: 🏢
 colorFrom: blue
 colorTo: indigo
@@ -7,9 +7,9 @@ sdk: docker
 pinned: false
 ---
 
-# Vertiqx Leads Backend
+# Lead Intelligence Backend
 
-FastAPI backend for the Vertiqx lead generation system.
+FastAPI backend for the lead intelligence system.
 
 ## Environment Variables
 

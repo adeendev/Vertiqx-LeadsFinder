@@ -44,10 +44,10 @@ def on_startup():
         defaults = {
             "SMTP_HOST": "smtp.hostinger.com",
             "SMTP_PORT": "465",
-            "SMTP_USER": "adeen@vertiqx.com",
+            "SMTP_USER": "",
             "SMTP_PASS": os.getenv("HOSTINGER_PASS", ""),
-            "SMTP_FROM": "adeen@vertiqx.com",
-            "COMPANY_NAME": "Vertiqx",
+            "SMTP_FROM": "",
+            "COMPANY_NAME": "",
             "COMPANY_WEBSITE": "",
             "COMPANY_LOGO": "",
             "TEMPLATE_TYPE": "html",

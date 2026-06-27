@@ -248,7 +248,7 @@ export default function SettingsPage() {
                     onChange={handleProviderChange}
                     className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-medium"
                   >
-                    <option value="hostinger">Hostinger (Vertiqx)</option>
+                    <option value="hostinger">Hostinger</option>
                     <option value="gmail">Gmail</option>
                   </select>
                   <p className="text-xs text-gray-500 mt-2">

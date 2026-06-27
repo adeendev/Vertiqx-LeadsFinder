@@ -1,5 +1,5 @@
 ---
-title: Vertiqx Leads Finder
+title: Lead Intelligence Frontend
 emoji: 📊
 colorFrom: blue
 colorTo: indigo
@@ -7,9 +7,9 @@ sdk: static
 pinned: false
 ---
 
-# Vertiqx Leads Finder Frontend
+# Lead Intelligence Frontend
 
-Next.js frontend for the Vertiqx lead generation system.
+Next.js frontend for the lead intelligence system.
 
 ## Build Instructions
 1. Run `npm install`

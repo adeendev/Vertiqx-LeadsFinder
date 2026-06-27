@@ -6,7 +6,7 @@ import { ToastProvider } from "@/components/Toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vertiqx Lead Generator",
+  title: "Lead Intelligence System",
   description: "Find high-quality leads",
   icons: { icon: "/icon.svg" },
 };

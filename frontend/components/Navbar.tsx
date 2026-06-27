@@ -34,7 +34,7 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
               </div>
               <div>
                 <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 tracking-tight">
-                  Vertiqx
+                  LeadGen
                 </h1>
                 <p className="text-[10px] uppercase tracking-widest font-bold text-blue-600/80">Intelligence</p>
               </div>
